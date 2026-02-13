@@ -1,0 +1,7 @@
+{
+  "name": "polysyllogism",
+  "description": "Chain analysis engine for multi-agent architectures. Analyzes agentic pipelines as formal inference chains, identifies enthymeme gaps (missing premises between agents), validates context propagation, and generates optimized fixes. Works on LangGraph, AutoGen, CrewAI, Anthropic Agent SDK, and Claude Code plugin architectures.",
+  "author": {
+    "name": "TrashWizard"
+  }
+}
