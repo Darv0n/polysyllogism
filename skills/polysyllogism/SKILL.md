@@ -107,7 +107,19 @@ Generate corrected artifacts:
 - Reasoning trace logging added
 - Plugin frontmatter corrections
 
-### Phase 4: APPLY — Write Fixes
+### Phase 4: DELIBERATE — Phronesis Gate
+
+Before applying any fix, question it from the perspective of the original engineer's intent.
+
+For each proposed fix:
+1. **What does this remove or change?** Name the concrete thing being cut.
+2. **Why was it there?** Reconstruct the original engineer's probable intent. Charitable interpretation, not dismissal.
+3. **Does the fix preserve the intent while closing the gap?** If yes, proceed. If it closes the gap by destroying legitimate capability, it is a Procrustean Fix — redesign it.
+4. **Could this be redistribution, not removal?** If a capability is on the wrong component rather than a wrong capability, move it rather than delete it.
+
+This phase exists because OPTIMIZE has the razor but not the pause. The razor finds what to cut; DELIBERATE asks whether cutting is the right action or whether reshaping serves better.
+
+### Phase 5: APPLY — Write Fixes
 
 This is what makes the Claude Code version different. Use Edit/Write tools to:
 - Patch state schemas directly
@@ -118,14 +130,14 @@ This is what makes the Claude Code version different. Use Edit/Write tools to:
 
 Present changes to user for approval before writing.
 
-### Phase 5: VERIFY — Closure Check
+### Phase 6: VERIFY — Closure Check
 
 Re-run Phase 2 against the corrected codebase:
 - All gaps closed?
 - All validation closures achieved?
 - No new gaps introduced by fixes?
 
-If gaps remain, iterate OPTIMIZE → APPLY → VERIFY.
+If gaps remain, iterate OPTIMIZE → DELIBERATE → APPLY → VERIFY.
 
 ## Quick Diagnosis
 
@@ -144,6 +156,7 @@ If gaps remain, iterate OPTIMIZE → APPLY → VERIFY.
 | Hook fires but can't access state | Hook Event Mismatch | Correct event type |
 | 285KB loaded when 5KB needed | Reference Overflow | Progressive disclosure |
 | Command assumes unavailable context | Command Enthymeme | Explicit argument requirements |
+| Fix removes capability along with problem | Procrustean Fix | Deliberate: redistribute, don't amputate |
 
 See [references/anti-patterns.md](references/anti-patterns.md) for the full catalog.
 
@@ -155,6 +168,7 @@ See [references/anti-patterns.md](references/anti-patterns.md) for the full cata
 - **Verification Closure**: Validator has all premises to complete proof
 - **Apodeictic**: Necessarily true, cannot be otherwise — how manifests should be written
 - **Elenchus**: Socratic refutation — testing claims against ground truth
+- **Phronesis**: Practical wisdom — the capacity to discern right action in context, not just apply rules
 - **Prolepsis**: Defensive prompting — anticipating failure modes
 
 See [references/lexicon.md](references/lexicon.md) for the complete terminology.
@@ -164,7 +178,9 @@ See [references/lexicon.md](references/lexicon.md) for the complete terminology.
 Load ONLY the reference matching the current phase. Do NOT load all at once.
 
 - **SCAN phase** → [references/pipeline.md](references/pipeline.md) §1 (Topology Discovery)
-- **ANALYZE phase** → [references/anti-patterns.md](references/anti-patterns.md) (13 failure modes) + [references/pipeline.md](references/pipeline.md) §2
-- **OPTIMIZE/APPLY phase** → [references/templates.md](references/templates.md) (schemas, manifests, plugin templates)
+- **ANALYZE phase** → [references/anti-patterns.md](references/anti-patterns.md) (14 failure modes) + [references/pipeline.md](references/pipeline.md) §2
+- **OPTIMIZE phase** → [references/templates.md](references/templates.md) (schemas, manifests, plugin templates)
+- **DELIBERATE phase** → [references/anti-patterns.md](references/anti-patterns.md) §14 (Procrustean Fix) + [references/pipeline.md](references/pipeline.md) §4
+- **APPLY phase** → [references/templates.md](references/templates.md) (schemas, manifests, plugin templates)
 - **Terminology questions** → [references/lexicon.md](references/lexicon.md) (precision vocabulary)
 - **Full pipeline walkthrough** → [references/pipeline.md](references/pipeline.md) (all phases)

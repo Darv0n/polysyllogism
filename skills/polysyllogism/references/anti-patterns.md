@@ -453,6 +453,78 @@ Principle: A command is an **entry point**, not a continuation. It must be self-
 
 ---
 
+### 14. Procrustean Fix
+
+Optimizer closes a gap by destroying legitimate capability the system needs.
+
+```
+OPTIMIZER SEES:   Agent_X has tool [T] not needed for its primary role
+OPTIMIZER DOES:   Remove [T] from Agent_X
+REALITY:          [T] served edge case Y that optimizer didn't consider
+RESULT:           Gap closed, but system loses capability Y
+
+ERROR: Fix fits the system to the model instead of
+       fitting the model to the system
+       Named for Procrustes: cut travelers to fit the bed
+```
+
+**Diagnostic:**
+- Fix removes a capability (tool, field, prompt section) rather than relocating it
+- No analysis of whether the removed thing served a purpose elsewhere in the chain
+- The fix "simplifies" by subtraction without checking what the subtraction destroys
+- Original engineer's intent is dismissed rather than reconstructed
+
+**Detection in codebase:**
+- Review OPTIMIZE phase output for any fix that removes rather than moves
+- For each removal, trace whether any other component reads, triggers, or depends on the removed thing
+- Check if the removed capability exists in any other component (redundancy check)
+- If the capability exists nowhere else after the fix, flag it
+
+**Detection during analysis:**
+- Optimizer proposes removing a tool from an agent → ask: does any phase need this tool?
+- Optimizer proposes narrowing a description → ask: do any legitimate triggers get lost?
+- Optimizer proposes deleting a state field → ask: does any downstream agent read it?
+- Optimizer proposes simplifying a prompt → ask: did the removed section handle an edge case?
+
+**Fix:**
+```markdown
+## DELIBERATION PROTOCOL (Procrustean Fix Prevention)
+
+For each proposed removal:
+1. NAME what is being removed
+2. RECONSTRUCT why it was there (charitable interpretation)
+3. CHECK if any other component needs it
+4. DECIDE:
+   - Wrong capability → Remove (safe)
+   - Right capability, wrong location → REDISTRIBUTE
+   - Uncertain purpose → FLAG FOR USER
+
+NEVER remove without reconstruction.
+Amputation is the last resort. Redistribution is the default.
+```
+
+**Example — the exact case that revealed this pattern:**
+
+```
+CONTEXT: Feature-forge plugin audit found agents with overlapping tools
+OPTIMIZER: Removed WebSearch, WebFetch, LS, NotebookRead from all agents
+RESULT:   Agents now "clean" but system lost:
+          - Web research capability (WebSearch, WebFetch)
+          - Directory orientation (LS)
+          - Notebook reading (NotebookRead)
+
+PROCRUSTEAN: The tools weren't wrong — they were on the wrong agents.
+
+CORRECT FIX:
+  - WebSearch, WebFetch → NEW code-researcher agent
+  - LS, NotebookRead → code-explorer agent (where they belong)
+  - KillShell, BashOutput → genuinely unused → remove (safe)
+```
+
+Principle: The optimizer's job is to close gaps, not to simplify. Simplification that destroys capability is not optimization — it is **amputation**. The DELIBERATE phase exists precisely to catch this: a moment of phronesis between the razor's cut and the wound's consequences.
+
+---
+
 ## Diagnostic Checklist
 
 For any observed failure, check systematically:
@@ -476,6 +548,7 @@ For any observed failure, check systematically:
 □ Hook Event Mismatch — hook reads state unavailable at event?
 □ Reference Overflow — loading 100KB when 5KB needed?
 □ Command Enthymeme — command assumes absent context?
+□ Procrustean Fix — fix removes capability along with problem?
 ```
 
 Each checked box points to a specific remediation pattern above.

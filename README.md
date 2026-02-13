@@ -4,7 +4,7 @@ Chain analysis engine for multi-agent architectures. Treats every agentic pipeli
 
 ## What It Does
 
-Polysyllogism analyzes multi-agent systems by decomposing them into chains of syllogisms. Where one agent's output feeds another agent's input, it checks whether the downstream agent has everything it needs to reason correctly. Gaps between agents -- missing state fields, insufficient prompt context, mismatched event hooks -- are classified against a catalog of 13 named anti-patterns and then fixed directly in the codebase.
+Polysyllogism analyzes multi-agent systems by decomposing them into chains of syllogisms. Where one agent's output feeds another agent's input, it checks whether the downstream agent has everything it needs to reason correctly. Gaps between agents -- missing state fields, insufficient prompt context, mismatched event hooks -- are classified against a catalog of 14 named anti-patterns and then fixed directly in the codebase.
 
 The output is corrected code, not a report.
 
@@ -30,12 +30,14 @@ The primary entry point. Invoke it from within Claude Code:
 
 If no path is provided, the command will ask what you want to analyze.
 
-The command runs a four-phase pipeline:
+The command runs a six-phase pipeline:
 
 1. **SCAN** -- Spawns the `chain-analyzer` agent to discover the topology (agents, state schemas, transitions, tools).
-2. **ANALYZE** -- Decomposes every transition into its logical chain and classifies gaps against the 13 anti-patterns.
-3. **OPTIMIZE + APPLY** -- Generates fixes using reference templates and applies them with user approval.
-4. **VERIFY** -- Re-runs analysis to confirm all gaps are closed.
+2. **ANALYZE** -- Decomposes every transition into its logical chain and classifies gaps against the 14 anti-patterns.
+3. **OPTIMIZE** -- Generates fixes using reference templates.
+4. **DELIBERATE** -- Phronesis gate. Questions each fix from the original engineer's perspective before applying. Catches Procrustean Fixes (pattern #14) where the optimizer removes legitimate capability along with the problem.
+5. **APPLY** -- Writes fixes with user approval.
+6. **VERIFY** -- Re-runs analysis to confirm all gaps are closed.
 
 ### Skill Trigger Phrases
 
@@ -73,8 +75,9 @@ A read-only autonomous scanner spawned during the SCAN phase. It uses Glob, Grep
 | 11 | Hook Event Mismatch | Hook registered for an event that does not carry the state it needs |
 | 12 | Reference Overflow | Skill loads disproportionate reference material relative to task needs |
 | 13 | Command Enthymeme | Slash command assumes context that will not be present at invocation |
+| 14 | Procrustean Fix | Optimizer closes gap by destroying capability the system legitimately needs |
 
-Patterns 1-8 are framework-agnostic (classic chain failures). Patterns 9-13 are specific to Claude Code and LLM-native architectures.
+Patterns 1-8 are framework-agnostic (classic chain failures). Patterns 9-14 are specific to Claude Code and LLM-native architectures.
 
 ## Architecture
 
@@ -90,7 +93,7 @@ polysyllogism/
     polysyllogism/
       SKILL.md               # Skill definition -- core framework and execution phases
       references/
-        anti-patterns.md     # 13 named failure modes with diagnostics and fixes
+        anti-patterns.md     # 14 named failure modes with diagnostics and fixes
         pipeline.md          # Step-by-step execution protocol for all phases
         templates.md         # Reusable schemas, manifests, and prompt injections
         lexicon.md           # Precision vocabulary (Aristotelian terminology)
@@ -99,7 +102,7 @@ polysyllogism/
 ### How the Components Relate
 
 1. The **command** (`/chain-audit`) is the entry point. It accepts a path argument or prompts the user for one.
-2. The command invokes the **skill** (polysyllogism), which defines the five-phase execution pipeline and loads references on demand.
+2. The command invokes the **skill** (polysyllogism), which defines the six-phase execution pipeline and loads references on demand.
 3. During the SCAN phase, the command spawns the **agent** (`chain-analyzer`) via the Task tool to perform autonomous topology discovery.
 4. The skill's **references** are loaded progressively by phase -- anti-patterns during ANALYZE, templates during OPTIMIZE, lexicon only when terminology precision is needed.
 

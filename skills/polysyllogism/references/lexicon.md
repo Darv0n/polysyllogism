@@ -46,6 +46,27 @@ Capability manifests should be apodeictic.
 ### ELENCHUS
 Socratic refutation. Testing claims against ground truth until contradiction emerges. The method critique agents should use.
 
+### PHRONESIS
+Practical wisdom. Aristotle's term for the capacity to discern the right action in a particular situation — not by applying rules mechanically, but by understanding intent, context, and consequence.
+
+```
+EPISTEME:   "This tool is not in the agent's primary role" (knowledge of fact)
+TECHNE:     "Remove the tool" (knowledge of how)
+PHRONESIS:  "The tool serves a purpose — move it to the right agent" (knowledge of what's wise)
+```
+
+In pipelines: The DELIBERATE phase is the structural instantiation of phronesis. The optimizer has episteme (it knows the gaps) and techne (it knows how to fix them). Phronesis asks whether the fix serves the system's intent, not just its formal structure.
+
+### PROCRUSTEAN
+From the myth of Procrustes, who forced travelers to fit his bed by stretching or cutting them. Applied to fixes that force the system to fit the model rather than fitting the model to the system.
+
+```
+PROCRUSTEAN:     Remove capability to close gap (system fits model)
+NON-PROCRUSTEAN: Redistribute capability to close gap (model fits system)
+```
+
+Anti-pattern 14. The DELIBERATE phase exists to catch this.
+
 ### PROLEPSIS
 Anticipation of objection. Addressing counterarguments before they arise.
 

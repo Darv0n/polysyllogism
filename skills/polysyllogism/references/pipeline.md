@@ -243,14 +243,86 @@ For plugins: rewritten description fields, enriched agent system prompts.
 
 ---
 
-## Phase 4: APPLY — Write Fixes
+## Phase 4: DELIBERATE — Phronesis Gate
+
+The optimizer has the razor. This phase supplies the pause.
+
+Every proposed fix from Phase 3 passes through four questions before it reaches the user. This is not review for correctness (that's VERIFY). This is review for **wisdom** — whether the fix serves the system's intent, not just its formal structure.
+
+### 4.1 For Each Proposed Fix
+
+```
+FIX #N: [description]
+═══════════════════════════════════════════════════════
+
+QUESTION 1: What does this remove or change?
+  → [Name the concrete thing: a field, a tool, a prompt section, a capability]
+
+QUESTION 2: Why was it there?
+  → [Reconstruct the original engineer's probable intent]
+  → [Charitable interpretation — assume competence, not negligence]
+  → [If uncertain, note it as UNCERTAIN rather than dismissing]
+
+QUESTION 3: Does the fix preserve intent while closing the gap?
+  □ YES — Fix closes gap AND preserves original capability → PROCEED
+  □ NO  — Fix closes gap BUT destroys legitimate capability → REDESIGN
+  □ UNCERTAIN — Cannot determine original intent → FLAG FOR USER
+
+QUESTION 4: Is this removal or redistribution?
+  □ The capability is WRONG (should not exist anywhere) → Remove
+  □ The capability is MISPLACED (right thing, wrong component) → Move it
+  □ The capability is REDUNDANT (already exists elsewhere) → Remove duplicate
+  □ The capability SERVES A PURPOSE not visible from this angle → PAUSE
+```
+
+### 4.2 Procrustean Fix Detection
+
+A fix is Procrustean if it closes a gap by destroying capability the system legitimately needs. Named after Procrustes, who made travelers fit his bed by cutting off their limbs.
+
+**Signals:**
+- Fix removes a tool from an agent's manifest without relocating it to another agent
+- Fix deletes a state field without confirming no downstream agent reads it
+- Fix simplifies a prompt by removing a section that addressed an edge case
+- Fix narrows a description so far that legitimate triggers no longer match
+
+**When detected:** Do not present the fix as-is. Redesign it as a redistribution:
+- Tool on wrong agent → move to correct agent
+- State field in wrong schema → propagate to correct schema
+- Prompt section in wrong agent → relocate to the agent that needs it
+- Description too broad → sharpen boundaries without eliminating valid triggers
+
+### 4.3 Output: Deliberated Fix Set
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  DELIBERATED FIXES                                       │
+├─────────────────────────────────────────────────────────┤
+│  PROCEED (intent preserved):                             │
+│  1. [fix] — original intent: [X], fix preserves it       │
+│  2. [fix] — capability was genuinely wrong, removal safe  │
+│                                                          │
+│  REDESIGNED (was Procrustean):                           │
+│  3. [fix] — originally removed [X], redesigned to move   │
+│     [X] to [correct location]                            │
+│                                                          │
+│  FLAGGED (uncertain intent):                             │
+│  4. [fix] — cannot determine why [X] exists. Presenting  │
+│     to user with both options.                           │
+└─────────────────────────────────────────────────────────┘
+```
+
+**CHECKPOINT: Present deliberated fix set to user. Proceed only with approved fixes.**
+
+---
+
+## Phase 5: APPLY — Write Fixes
 
 Use Edit tool for surgical changes. Use Write tool only for new files.
 
 **Protocol:**
 1. Show user the proposed change (old → new)
 2. On approval, apply with Edit tool
-3. Log each applied change for Phase 5 verification
+3. Log each applied change for Phase 6 verification
 
 **For code pipelines:**
 - Edit state schema files
@@ -267,16 +339,16 @@ Use Edit tool for surgical changes. Use Write tool only for new files.
 
 ---
 
-## Phase 5: VERIFY — Closure Check
+## Phase 6: VERIFY — Closure Check
 
-### 5.1 Re-run Analysis
+### 6.1 Re-run Analysis
 
 Execute Phase 2 again against the modified codebase:
 - Are all previously identified gaps now closed?
 - Did any fixes introduce new gaps?
 - Are all validation closures achieved?
 
-### 5.2 Cross-Reference
+### 6.2 Cross-Reference
 
 For Claude Code plugins specifically:
 - Do skill descriptions still trigger correctly after edits?
@@ -284,7 +356,7 @@ For Claude Code plugins specifically:
 - Do hook events match the state they inspect?
 - Is reference loading proportional?
 
-### 5.3 Report
+### 6.3 Report
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -302,4 +374,4 @@ For Claude Code plugins specifically:
 └─────────────────────────────────────────────────────────┘
 ```
 
-If NEEDS ITERATION → return to Phase 3 with remaining gaps.
+If NEEDS ITERATION → return to Phase 3 with remaining gaps (fixes pass through DELIBERATE again on each iteration).

@@ -18,7 +18,7 @@ polysyllogism/
     polysyllogism/
       SKILL.md               # Skill entry point. Frontmatter defines name and description (trigger contract).
       references/
-        anti-patterns.md     # 13 named failure modes -- the diagnostic catalog.
+        anti-patterns.md     # 14 named failure modes -- the diagnostic catalog.
         pipeline.md          # Phase-by-phase execution protocol.
         templates.md         # Reusable schemas, manifests, prompt injections for both domains.
         lexicon.md           # Precision terminology. Aristotelian vocabulary used across all files.
@@ -51,14 +51,14 @@ There is no automated test suite. Validation is manual: load the plugin, run it 
 
 ## Anti-Pattern Naming Conventions
 
-All 13 anti-patterns use Aristotelian vocabulary. This is deliberate. The terms are precise, each mapping to a specific logical failure mode with a defined diagnostic and fix.
+All 14 anti-patterns use Aristotelian vocabulary. This is deliberate. The terms are precise, each mapping to a specific logical failure mode with a defined diagnostic and fix.
 
 When adding or modifying anti-patterns:
 
 - Use terms from the formal logic and rhetorical traditions (syllogism, enthymeme, elenchus, apodeictic, etc.).
 - Each anti-pattern must have: a name, a structural description of the failure, a diagnostic (how to detect it), and a fix (how to remediate it).
 - The name should describe the logical failure, not the symptom. "Context Starvation" names the structural cause; "agent crashes" names the symptom.
-- Patterns 1-8 are framework-agnostic (classic chain failures). Patterns 9-13 are Claude Code / LLM-native. Maintain this division.
+- Patterns 1-8 are framework-agnostic (classic chain failures). Patterns 9-14 are Claude Code / LLM-native. Maintain this division.
 - Consult `references/lexicon.md` before introducing new terminology to avoid conflicts or redundancies.
 
 ## Reference File Organization
@@ -67,8 +67,8 @@ References live in `skills/polysyllogism/references/` and are loaded on demand d
 
 | File | Loaded During | Contains |
 |------|---------------|----------|
-| `pipeline.md` | SCAN, ANALYZE, full walkthroughs | Step-by-step execution protocol for all five phases |
-| `anti-patterns.md` | ANALYZE | The 13 failure modes with diagnostics and fixes |
+| `pipeline.md` | SCAN, ANALYZE, DELIBERATE, full walkthroughs | Step-by-step execution protocol for all six phases |
+| `anti-patterns.md` | ANALYZE, DELIBERATE | The 14 failure modes with diagnostics and fixes |
 | `templates.md` | OPTIMIZE / APPLY | Reusable code schemas, capability manifests, prompt injections, plugin templates |
 | `lexicon.md` | On demand (terminology questions) | Precision vocabulary definitions |
 

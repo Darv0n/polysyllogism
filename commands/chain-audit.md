@@ -42,15 +42,26 @@ Using the topology, decompose every transition into its logical chain:
 - What does each upstream component PROVIDE?
 - Where are the gaps?
 
-Classify each gap against the 13 anti-patterns catalog. Present the gap report with severity ratings.
+Classify each gap against the 14 anti-patterns catalog. Present the gap report with severity ratings.
 
-### Phase 3: OPTIMIZE + APPLY
+### Phase 3: OPTIMIZE
 For each confirmed gap:
 - Generate the specific fix using templates from the skill references
-- Show the proposed change to the user
+
+### Phase 4: DELIBERATE
+Before presenting fixes to the user, run each through the phronesis gate:
+- What does this fix remove or change?
+- Why was the original thing there? (Charitable interpretation)
+- Does the fix preserve intent while closing the gap?
+- Is this removal or redistribution?
+
+Flag any Procrustean Fixes (pattern #14) and redesign them as redistributions.
+
+### Phase 5: APPLY
+- Show the deliberated fixes to the user
 - On approval, apply with Edit tool
 
-### Phase 4: VERIFY
+### Phase 6: VERIFY
 Re-run the analysis to confirm all gaps are closed. Report results.
 
 ## Output
